@@ -1,0 +1,1 @@
+export const BASE_YYTAPI = 'http://localhost:5454';
