@@ -1,0 +1,2 @@
+export const CREATE_NEW_MESSAGES = 'CREATE_NEW_MSG';
+export const GET_ALL_MESSAGES = 'GET_ALL_MESSAGES';

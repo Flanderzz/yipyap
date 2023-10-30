@@ -12,7 +12,7 @@ const Signup = () => {
     const [inputData, setInputData] = useState({name:"", email:"", password:""});
     const {auth} = useSelector(store => store);
     const [openSnackBar, setOpenSnackBar] = useState(false);
-    const token = localStorage.getItem("Token");
+    const token = localStorage.getItem("token");
     const handleSnackBar = () => {
         setOpenSnackBar(false);
     }

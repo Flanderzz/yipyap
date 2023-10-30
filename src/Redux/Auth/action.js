@@ -13,7 +13,7 @@ export const register = (data) => async(dispatch) => {
         });
         const responseData = await response.json();
 
-        if(responseData.jwt){localStorage.setItem("Token", responseData.jwt);}
+        if(responseData.jwt){localStorage.setItem("token", responseData.jwt);}
 
         console.log('User: ', responseData);
 
@@ -67,7 +67,7 @@ export const currUser = (token) => async(dispatch) => {
 
 export const searchUser = (data) => async(dispatch) => {
     try {
-        const response = await fetch(`${BASE_YYTAPI}/api/users/search?name=${data.keyword}`, {
+        const response = await fetch(`${BASE_YYTAPI}/api/users/search/${data.keyword}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

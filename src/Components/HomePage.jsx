@@ -15,8 +15,9 @@ import { BiLogOutCircle } from "react-icons/bi";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import CreateGroupChat from "./GroupChat/CreateGroupChat";
 import { useDispatch, useSelector, } from "react-redux";
-import { logout } from "../Redux/Auth/action";
+import { logout, searchUser } from "../Redux/Auth/action";
 import { currUser } from "../Redux/Auth/action";
+import { createChat } from "../Redux/Chat/action";
 
 
 const HomePage = () => {
@@ -25,11 +26,20 @@ const HomePage = () => {
     const [querys, setQuerys] = useState(null);
     const navigator = useNavigate();
     const token = localStorage.getItem("token");
+
+    const handleClickOnChatCard = (userID) => {
+        dispatch(createChat({token, data:{userID}}));
+        
+    };
     const [currentChat, setCurrentChat] = useState(null);
-    const handleClickOnChatCard = () => [setCurrentChat(true)]
     const [content, setContent] = useState("");
     const handleCreateNewMsg = () => {};
-    const handleSearch = () => [];
+    const handleSearch = (keyword) => {
+        dispatch(searchUser({keyword, token}));
+    }
+    // const handleCreateGroup = (userID) => {
+    // }
+    const thing = auth.searchUser;
     const handleBackButton = () =>{
         setIsUserProfile(false);
     }
@@ -54,24 +64,18 @@ const HomePage = () => {
      const handleLogout = () => {
         dispatch(logout());
         navigator('/register')
-
      }
      useEffect(() => {
-
-
         if(token){
             dispatch(currUser(token));
-
         }
-    }, [token, dispatch]);
+    }, [token]);
 
      useEffect(() => {
-        console.log("auth 2",auth.reqUser);
-
         if(!auth.reqUser){
             navigator('/register')
         }
-     }, [auth.reqUser, navigator])
+     }, [auth.reqUser])
 
     return(
         <div className="relative">
@@ -79,7 +83,7 @@ const HomePage = () => {
             <div className="flex bg-[#f9f6f3] h-[93vh] w-[96vw] absolute top-9 left-[2vw] right-[50%]">
                 <div className="left w-[25%] bg-[#ffece3] border-r-2 border-[#D0D0D0] h-full">
 
-                    {isGroupChat && <CreateGroupChat />}
+                    {isGroupChat && <CreateGroupChat/>}
                     
                     {isUserProfile && <div className="w-full h-full"><Profiles handleBackButton={handleBackButton}/></div>}  
                     
@@ -89,7 +93,7 @@ const HomePage = () => {
                                 <img className='rounded-full w-10 h-10 cursor-pointer' 
                                 src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg" 
                                 alt=""/>
-                                <p className="cursor-pointer">username</p>
+                                <p className="cursor-pointer">{auth.reqUser?.name}</p>
                             </div>
                             <div className="space-x-3 text-lg flex cursor-pointer">
                                 <GoGear onClick={() => {navigator("/settings")}}/>
@@ -118,11 +122,11 @@ const HomePage = () => {
                             <input className=" outline-[#0080ff] bg-[#ffece3] rounded-md w-[95%] pl-11 " 
                             type="text" 
                             placeholder="Find Users to Yap to Here"
+                            value={querys}
                             onChange={(e) => {
                                 setQuerys(e.target.value);
                                 handleSearch(e.target.value);
-                            }}
-                            value={querys}/>
+                            }}/>
                             <GoSearch className="left-8 top-6.7 absolute text-lg pointer-events-auto"/>
 
                             <div className="ml-4 text-3xl flex cursor-pointer">
@@ -130,11 +134,7 @@ const HomePage = () => {
                             </div>
                         </div>
                         <div className=" overflow-y-scroll h-[78vh] px-3">
-                            {querys && [1,1,1,1,1].map((item) => <div onClick={handleClickOnChatCard}> <hr /><ChatCards/></div>)}
-                            
-                        </div>
-                        <div>
-
+                            {querys && thing?.map((item) => <div onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>)}  
                         </div>
                     </div>}
                 </div>
@@ -157,7 +157,7 @@ const HomePage = () => {
                         className='h-10 w-10 rounded-full'
                         src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg" 
                         alt="" />
-                            <p>username</p>
+                            <p>{auth.reqUser?.name}</p>
                         </div>
                         <div className="py-3 space-x-4  flex items-center px-3">  
                             <GoSearch className="cursor-pointer"/>
@@ -174,7 +174,8 @@ const HomePage = () => {
                     <div className="flex justify-between items-center px-5 text-xl relative">
                             <MdOutlineEmojiEmotions className="cursor-pointer "/>
                             <FaRegImage className="cursor-pointer"/>
-                        <input className="py-2 outline-none border-none bg-white pl-4 rounded-md w-[85%]" 
+                        <input 
+                        className="py-2 outline-none border-none bg-white pl-4 rounded-md w-[85%]" 
                         type="text" 
                         onChange={(e) => {setContent(e.target.value)}} 
                         placeholder="Yap to (something)"

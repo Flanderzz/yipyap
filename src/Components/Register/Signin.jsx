@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Snackbar, Alert } from '@mui/material';
 import { MdEmail } from 'react-icons/md';
 import { RiKey2Fill } from 'react-icons/ri';
+import { useDispatch } from 'react-redux';
+import { login, currUser } from '../../Redux/Auth/action';
 
 const Signin = () => {
     const navigate = useNavigate();
@@ -10,6 +13,12 @@ const Signin = () => {
     const [inputData, setInputData] = useState({email:"", password:""});
 
     const [openSnackBar, setOpenSnackBar] = useState(false);
+
+    const {auth} = useSelector(store => store);
+
+    const token = localStorage.getItem('token');
+
+    const dispatch = useDispatch();
 
     const handleSnackBar = () => {
         setOpenSnackBar(false);
@@ -19,7 +28,25 @@ const Signin = () => {
         e.preventDefault();
         console.log(inputData);
         setOpenSnackBar(true);
+        dispatch(login(inputData));
     }
+
+
+    useEffect(() => {
+
+        console.log("auth",auth.reqUser);
+
+        if(token){
+            dispatch(currUser(token));
+        }
+    }, [token]);
+    
+    useEffect(()=>{
+        
+        if(auth.reqUser?.name){
+            navigate("/");
+        }
+    },[auth.reqUser]);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
