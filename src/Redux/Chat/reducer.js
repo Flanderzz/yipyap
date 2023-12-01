@@ -1,20 +1,22 @@
-import { CREATE_CHAT, CREATE_GROUP_CHAT, GET_ALL_CHATS } from "./actionTypes";
+import { CREATE_CHAT, CREATE_GROUP_CHAT, GET_USERS_CHATS } from "./actionTypes";
 
 const initialValue = {
-    chat: [],
+    chats: [],
     groupChat: null,
-    getAll: null
+    getChats: null
 }
 
 export const chatReducer = (store=initialValue, {type, payload}) => {
     switch (type) {
         case CREATE_CHAT:
-            return {...store,chat:payload}
+            return {...store, chats:payload};
+
         case CREATE_GROUP_CHAT:
-            return {...store,groupChat:payload}
-        case GET_ALL_CHATS:
-            return {...store,getAll:payload}
+            return {...store, groupChat:payload};
+
+        case GET_USERS_CHATS:
+            return {...store, getChats:payload};
         default:
-            return store
+            return store;
     }
 }

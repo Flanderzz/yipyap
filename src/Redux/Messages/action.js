@@ -17,7 +17,7 @@ export const createMsg = (msgData) => async(dispatch) => {
 
 
     } catch (error) {
-        console.log('error: ', error)
+        console.error('error: ', error)
         
     }
 }
@@ -38,7 +38,7 @@ export const getAllMsg = (reqData) => async(dispatch) => {
 
 
     } catch (error) {
-        console.log('error: ', error)
+        console.error('error: ', error)
         
     }
 }

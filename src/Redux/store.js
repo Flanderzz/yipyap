@@ -8,7 +8,6 @@ const rootReducer = combineReducers({
     auth: authReducer,
     chat: chatReducer,
     msg: messageReducer
-
 });
 
 export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));

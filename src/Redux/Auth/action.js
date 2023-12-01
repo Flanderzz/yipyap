@@ -15,12 +15,12 @@ export const register = (data) => async(dispatch) => {
 
         if(responseData.jwt){localStorage.setItem("token", responseData.jwt);}
 
-        console.log('User: ', responseData);
+        console.log('registered User: ', responseData);
 
         dispatch({type:REGISTER, payload:responseData});
 
     } catch(error) {
-        console.log("ERROR: ", error);
+        console.error("ERROR: ", error);
     }
 }
 
@@ -34,18 +34,20 @@ export const login = (data) => async(dispatch) => {
             body:JSON.stringify(data)
         });
         const responseData = await response.json();
+        
+        if(responseData.jwt){localStorage.setItem('token', responseData.jwt)}
 
-        console.log('User: ', responseData);
+        console.log('logged in User: ', responseData);
 
         dispatch({type:LOGIN, payload:responseData});
 
     } catch(error) {
-        console.log("ERROR: ", error);
+        console.error("ERROR: ", error);
     }
 }
 
 export const currUser = (token) => async(dispatch) => {
-    console.log('current-user: ', token);
+    // console.log('current-user: ', token);
     try {
         const response = await fetch(`${BASE_YYTAPI}/api/users/profile`, {
             method: "GET",
@@ -56,12 +58,12 @@ export const currUser = (token) => async(dispatch) => {
         });
         const responseData = await response.json();
 
-        console.log('token: ', responseData);
+        // console.log('token: ', responseData);
 
         dispatch({type:REQ_USER, payload:responseData});
 
     } catch(error) {
-        console.log("ERROR: ", error);
+        console.error("ERROR: ", error);
     }
 }
 
@@ -81,7 +83,7 @@ export const searchUser = (data) => async(dispatch) => {
         dispatch({type:SEARCH_USER, payload:responseData});
 
     } catch(error) {
-        console.log("ERROR: ", error);
+        console.error("ERROR: ", error);
     }
 }
 
@@ -96,12 +98,12 @@ export const updateUser = (data) => async(dispatch) => {
         });
         const responseData = await response.json();
 
-        console.log('search: ', responseData);
+        console.log('update: ', responseData);
 
         dispatch({type:UPDATE_USER, payload:responseData});
 
     } catch(error) {
-        console.log("ERROR: ", error);
+        console.error("ERROR: ", error);
     }
 }
 
@@ -109,5 +111,4 @@ export const logout = () => async(dispatch) => {
     localStorage.removeItem('token');
     dispatch({type: LOGOUT, payload:null});
     dispatch({type:REQ_USER, payload:null});
-
 } 
