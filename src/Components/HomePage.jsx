@@ -78,7 +78,7 @@ const HomePage = () => {
     useEffect(() => {
        dispatch(getAllChats({ token }));
     //    Bug:
-    }, [chat.getChatsq, chat.groupChat]);
+    }, [chat.getChats, chat.groupChat]);
 
     return(
         <div className="relative">
