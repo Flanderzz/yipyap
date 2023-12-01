@@ -17,13 +17,12 @@ import CreateGroupChat from "./GroupChat/CreateGroupChat";
 import { useDispatch, useSelector, } from "react-redux";
 import { logout, searchUser } from "../Redux/Auth/action";
 import { currUser } from "../Redux/Auth/action";
-import { createChat } from "../Redux/Chat/action";
-
+import { createChat, getAllChats } from "../Redux/Chat/action";
 
 const HomePage = () => {
     const dispatch = useDispatch();
-    const {auth} = useSelector(store => store);
-    const [querys, setQuerys] = useState(null);
+    const {auth, chat, msg} = useSelector(store => store);
+    const [querys, setQuerys] = useState('');
     const navigator = useNavigate();
     const token = localStorage.getItem("token");
 
@@ -31,15 +30,14 @@ const HomePage = () => {
         dispatch(createChat({token, data:{userID}}));
         
     };
+
     const [currentChat, setCurrentChat] = useState(null);
     const [content, setContent] = useState("");
     const handleCreateNewMsg = () => {};
     const handleSearch = (keyword) => {
         dispatch(searchUser({keyword, token}));
     }
-    // const handleCreateGroup = (userID) => {
-    // }
-    const thing = auth.searchUser;
+
     const handleBackButton = () =>{
         setIsUserProfile(false);
     }
@@ -63,7 +61,7 @@ const HomePage = () => {
      }
      const handleLogout = () => {
         dispatch(logout());
-        navigator('/register')
+        navigator('/login')
      }
      useEffect(() => {
         if(token){
@@ -75,7 +73,12 @@ const HomePage = () => {
         if(!auth.reqUser){
             navigator('/register')
         }
-     }, [auth.reqUser])
+     }, [auth.reqUser]);
+
+    useEffect(() => {
+       dispatch(getAllChats({ token }));
+    //    Bug:
+    }, [chat.getChatsq, chat.groupChat]);
 
     return(
         <div className="relative">
@@ -85,12 +88,13 @@ const HomePage = () => {
 
                     {isGroupChat && <CreateGroupChat/>}
                     
-                    {isUserProfile && <div className="w-full h-full"><Profiles handleBackButton={handleBackButton}/></div>}  
+                    {isUserProfile && <div className="w-full h-full"><Profiles handleBackButton={handleBackButton} item={auth.reqUser}/></div>}  
                     
                     {!isUserProfile && !isGroupChat && <div className="w-full">
                          <div className="flex justify-between items-center p-3">
                             <div onClick={handleNavigation} className="flex items-center space-x-3">
-                                <img className='rounded-full w-10 h-10 cursor-pointer' 
+                                <img 
+                                className='rounded-full w-10 h-10 cursor-pointer' 
                                 src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg" 
                                 alt=""/>
                                 <p className="cursor-pointer">{auth.reqUser?.name}</p>
@@ -119,7 +123,8 @@ const HomePage = () => {
                             </div>
                         </div>
                         <div className="relative flex justify-center items-center bg-[#FFA239] py-4 px-4 border-t-2 border-[#D0D0D0]">
-                            <input className=" outline-[#0080ff] bg-[#ffece3] rounded-md w-[95%] pl-11 " 
+                            <input 
+                            className=" outline-[#0080ff] bg-[#ffece3] rounded-md w-[95%] pl-11 " 
                             type="text" 
                             placeholder="Find Users to Yap to Here"
                             value={querys}
@@ -134,7 +139,11 @@ const HomePage = () => {
                             </div>
                         </div>
                         <div className=" overflow-y-scroll h-[78vh] px-3">
-                            {querys && thing?.map((item) => <div onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>)}  
+                            {/* {console.log('auth.searchUser',auth.searchUser)} */}
+                            {/* kinda goofy, fix soon -> Error being that your not putting auth.searchUser as an array */}
+                            {querys && Object.values(auth.searchUser)?.map((item) => (<div key={item.id} onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>))}
+                            {currentChat && !querys && chat.getChats?.map((item) => (<div key={item.id} onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>))}  
+
                         </div>
                     </div>}
                 </div>
@@ -144,7 +153,7 @@ const HomePage = () => {
                         className=""
                         src="https://global.discourse-cdn.com/pocketgems/uploads/episodeinteractive/original/4X/7/b/0/7b041e698ac5ef3b6eaf6b62995ac733f0af7a57.png" 
                         alt="" />
-                        <p className="text-3xl flex items-center justify-center text-[#1caef3]">Yip-Yap <span className="text-[#EA7315]">&nbsp;Time</span></p>
+                        <p className="text-3xl flex items-center font-bold justify-center text-[#1caef3]">Yip-Yap <span className="text-[#EA7315]">&nbsp;Time</span></p>
                         <p className="my-9">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
                     </div>
                 </div>}

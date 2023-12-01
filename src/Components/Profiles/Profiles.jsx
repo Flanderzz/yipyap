@@ -6,7 +6,7 @@ import { FcCheckmark } from "react-icons/fc";
 import { AiOutlineCamera } from "react-icons/ai";
  
 
-const Profiles = ({handleBackButton}) => {
+const Profiles = ({handleBackButton, item}) => {
     const [flag, setFlag]=useState(false);
     const [username, setUsername] = useState(null);
     const handleNameChange = (e) => {
@@ -45,25 +45,24 @@ const Profiles = ({handleBackButton}) => {
         <div className='bg-[#C3EBFF]'>
             <p className='py-3 underline underline-offset-1'>Edit Name:</p>
             {!flag && <div className='flex justify-between items-center w-full pb-3'>
-               <p className='pl-2'>{username || "Username"}</p>
+               <p className='pl-2'>{ username || item.name }</p>
                 <RiEdit2Line 
-                onClick={handleFlag}
+                onClick={ handleFlag }
                 className='cursor-pointer text-3xl pr-2'/>  
             </div>}
 
             {flag && <div className='bg-[#C3EBFF]'>
                 <div className='flex justify-between items-center w-full pb-3'>
                     <input 
-                    onChange={handleNameChange}
+                    onChange={ handleNameChange }
                     type="text" 
                     className='bg-[#C3EBFF] pl-1 outline-none w-[90%] border-b-2 border-black placeholder-gray-500 text-black ' 
                     placeholder='Username'/>
                     <FcCheckmark
-                    onClick={handleCheckmark}
+                    onClick={ handleCheckmark }
                     className='cursor-pointer text-3xl pr-2'/>
                 </div>
             </div>}
-
         </div>
     </div>
   );
