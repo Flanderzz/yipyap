@@ -16,6 +16,7 @@ export const authReducer = (store=initialValue, {type, payload}) => {
         case LOGIN:
             return {...store,signin:payload}
         case REQ_USER:
+            console.log("we are calling this");
             return {...store,reqUser:payload}
         case SEARCH_USER:
             return {...store,searchUser:payload}

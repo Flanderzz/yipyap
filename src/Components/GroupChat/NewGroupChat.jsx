@@ -1,9 +1,7 @@
 import { CircularProgress } from '@mui/material';
-import { Button } from 'bootstrap';
 import React, { useState } from 'react';
 import { CgPushLeft } from "react-icons/cg";
 import { IoCheckmarkSharp } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom';
 
 const NewGroupChat = () => {
     const [imgUpload, setImgUpload] = useState(false);
@@ -20,7 +18,7 @@ const NewGroupChat = () => {
                 <p className='text-bold'>&nbsp;&nbsp;&nbsp;&nbsp;Create Group Chat Name</p>
             </div>
             <div className='flex flex-col items-center justify-center my-12'>
-                <label 
+                <label
                 htmlFor="GroupChatImg"
                 className='relative'>
                     <img src="https://cdn.pixabay.com/photo/2016/04/15/18/05/computer-1331579_1280.png" alt="" />
@@ -28,15 +26,15 @@ const NewGroupChat = () => {
                 </label>
                 <input type="file"
                 id='GroupChatImg'
-                className='hidden' 
+                className='hidden'
                 onChange={() => {console.log("The GC photo change works")}}/>
-                <p className='pl-2 font-bold text-xl'>{groupChatName || "Group Chat Name"}</p>    
+                <p className='pl-2 font-bold text-xl'>{groupChatName || "Group Chat Name"}</p>
             </div>
             <div className='w-full py-2 px-5 flex justify-between items-center'>
-                <input 
-                type="text" 
+                <input
+                type="text"
                 className='w-full outline-none border-b-2 border-orange-400 px-2 bg-[#ffece3] '
-                onChange={handleGroupChatNameChange} 
+                onChange={handleGroupChatNameChange}
                 placeholder='Group Chat Name'
                 value={groupChatName}/>
             </div>
