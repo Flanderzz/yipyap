@@ -28,7 +28,7 @@ const HomePage = () => {
 
     const handleClickOnChatCard = (userID) => {
         dispatch(createChat({token, data:{userID}}));
-        
+
     };
 
     const [currentChat, setCurrentChat] = useState(null);
@@ -47,7 +47,7 @@ const HomePage = () => {
     const handleNavigation = () => {
         setIsUserProfile(true);
      }
-     
+
      const [anchorEl, setAnchorEl] = React.useState(null);
      const open = Boolean(anchorEl);
      const handleClick = (event) => {
@@ -63,22 +63,25 @@ const HomePage = () => {
         dispatch(logout());
         navigator('/login')
      }
-     useEffect(() => {
-        if(token){
+    useEffect(() => {
+        // Dispatch action to get current user if token exists
+        if (token && !auth.reqUser) {
             dispatch(currUser(token));
         }
-    }, [token]);
 
-     useEffect(() => {
-        if(!auth.reqUser){
-            navigator('/register')
+        // Redirect to '/register' if reqUser is false
+        if (!auth.reqUser) {
+            navigator('/register');
         }
-     }, [auth.reqUser]);
 
-    useEffect(() => {
-       dispatch(getAllChats({ token }));
-    //    Bug:
-    }, [chat.getChats, chat.groupChat]);
+        // Dispatch action to get all chats if necessary
+        if (token && !chat.getChats) {
+            dispatch(getAllChats({ token }));
+        }
+
+        // Additional logic for handling chat.getChats and chat.groupChat
+
+    }, [token, auth.reqUser, navigator, chat.getChats, dispatch]);
 
     return(
         <div className="relative">
@@ -87,15 +90,15 @@ const HomePage = () => {
                 <div className="left w-[25%] bg-[#ffece3] border-r-2 border-[#D0D0D0] h-full">
 
                     {isGroupChat && <CreateGroupChat/>}
-                    
-                    {isUserProfile && <div className="w-full h-full"><Profiles handleBackButton={handleBackButton} item={auth.reqUser}/></div>}  
-                    
+
+                    {isUserProfile && <div className="w-full h-full"><Profiles handleBackButton={handleBackButton} item={auth.reqUser}/></div>}
+
                     {!isUserProfile && !isGroupChat && <div className="w-full">
                          <div className="flex justify-between items-center p-3">
                             <div onClick={handleNavigation} className="flex items-center space-x-3">
-                                <img 
-                                className='rounded-full w-10 h-10 cursor-pointer' 
-                                src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg" 
+                                <img
+                                className='rounded-full w-10 h-10 cursor-pointer'
+                                src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg"
                                 alt=""/>
                                 <p className="cursor-pointer">{auth.reqUser?.name}</p>
                             </div>
@@ -123,9 +126,9 @@ const HomePage = () => {
                             </div>
                         </div>
                         <div className="relative flex justify-center items-center bg-[#FFA239] py-4 px-4 border-t-2 border-[#D0D0D0]">
-                            <input 
-                            className=" outline-[#0080ff] bg-[#ffece3] rounded-md w-[95%] pl-11 " 
-                            type="text" 
+                            <input
+                            className=" outline-[#0080ff] bg-[#ffece3] rounded-md w-[95%] pl-11 "
+                            type="text"
                             placeholder="Find Users to Yap to Here"
                             value={querys}
                             onChange={(e) => {
@@ -142,16 +145,16 @@ const HomePage = () => {
                             {/* {console.log('auth.searchUser',auth.searchUser)} */}
                             {/* kinda goofy, fix soon -> Error being that your not putting auth.searchUser as an array */}
                             {querys && Object.values(auth.searchUser)?.map((item) => (<div key={item.id} onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>))}
-                            {currentChat && !querys && chat.getChats?.map((item) => (<div key={item.id} onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>))}  
+                            {currentChat && !querys && chat.getChats?.map((item) => (<div key={item.id} onClick={() => handleClickOnChatCard(item.id)}> <hr /><ChatCards item={item}/></div>))}
 
                         </div>
                     </div>}
                 </div>
                 {!currentChat && <div className="w-[70%] flex flex-col items-center justify-center h-full">
                     <div className="max-w-[70%] text-center">
-                        <img 
+                        <img
                         className=""
-                        src="https://global.discourse-cdn.com/pocketgems/uploads/episodeinteractive/original/4X/7/b/0/7b041e698ac5ef3b6eaf6b62995ac733f0af7a57.png" 
+                        src="https://global.discourse-cdn.com/pocketgems/uploads/episodeinteractive/original/4X/7/b/0/7b041e698ac5ef3b6eaf6b62995ac733f0af7a57.png"
                         alt="" />
                         <p className="text-3xl flex items-center font-bold justify-center text-[#1caef3]">Yip-Yap <span className="text-[#EA7315]">&nbsp;Time</span></p>
                         <p className="my-9">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
@@ -162,13 +165,13 @@ const HomePage = () => {
                 <div className="header absolute border-l-2 border-[#D0D0D0] bg-[#90c4ff] top-0 w-full border-b-2 outline-black">
                     <div className="flex justify-between">
                         <div className="py-3 space-x-4 flex items-center px-3">
-                        <img 
+                        <img
                         className='h-10 w-10 rounded-full'
-                        src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg" 
+                        src="https://wallpapers.com/images/hd/basic-default-pfp-pxi77qv5o0zuz8j3.jpg"
                         alt="" />
                             <p>{auth.reqUser?.name}</p>
                         </div>
-                        <div className="py-3 space-x-4  flex items-center px-3">  
+                        <div className="py-3 space-x-4  flex items-center px-3">
                             <GoSearch className="cursor-pointer"/>
                             <BsThreeDotsVertical className="cursor-pointer"/>
                         </div>
@@ -183,10 +186,10 @@ const HomePage = () => {
                     <div className="flex justify-between items-center px-5 text-xl relative">
                             <MdOutlineEmojiEmotions className="cursor-pointer "/>
                             <FaRegImage className="cursor-pointer"/>
-                        <input 
-                        className="py-2 outline-none border-none bg-white pl-4 rounded-md w-[85%]" 
-                        type="text" 
-                        onChange={(e) => {setContent(e.target.value)}} 
+                        <input
+                        className="py-2 outline-none border-none bg-white pl-4 rounded-md w-[85%]"
+                        type="text"
+                        onChange={(e) => {setContent(e.target.value)}}
                         placeholder="Yap to (something)"
                         value={content}
                         onKeyPress={(e)=>{
@@ -196,13 +199,13 @@ const HomePage = () => {
                             }
                         }}/>
                     </div>
-                    
+
                 </div>
             </div>}
 
             </div>
         </div>
-       
+
     );
 }
 

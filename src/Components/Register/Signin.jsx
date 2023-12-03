@@ -33,20 +33,17 @@ const Signin = () => {
 
 
     useEffect(() => {
-
-        console.log("auth",auth.reqUser);
-
-        if(token){
+        console.log("auth", auth.reqUser);
+        // Dispatch action to get current user if token exists
+        if (token && !auth.reqUser) {
             dispatch(currUser(token));
         }
-    }, [token]);
-    
-    useEffect(()=>{
-        
-        if(auth.reqUser?.name){
+
+        // Redirect to '/' if reqUser has a name
+        if (auth.reqUser?.name) {
             navigate("/");
         }
-    },[auth.reqUser]);
+    }, [token, auth.reqUser, navigate, dispatch]);
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -59,13 +56,13 @@ const Signin = () => {
                 <div className='w-[30%] shadow-md p-10 bg-[#FFCF95] border-orange-400 border-2'>
                     <form onSubmit={handleSignin}
                           className='space-y-5'>
-                            <div class="relative mb-6">
+                            <div className="relative mb-6">
                                 <MdEmail className="pointer-events-none w-8 h-8 absolute top-1/2 transform -translate-y-1/6 left-2 text-[#454c4c]" />
                                 <p className='mb-2 font-bold text-blue-600'>Email:  </p>
-                                <input 
-                                type="email" 
+                                <input
+                                type="email"
                                 name='email'
-                                autocomplete="on"
+                                autoComplete="on"
                                 placeholder='you@example.com'
                                 className="py-2 pl-11 outline bg-[#CDEDFF] outline-orange-400 w-full form-input rounded-md border"
                                 onChange={(e) => handleChange(e)}
@@ -74,13 +71,13 @@ const Signin = () => {
                             </div>
 
                             {/* add hide and unhide function */}
-                            <div class="relative mb-6">
+                            <div className="relative mb-6">
                                 <RiKey2Fill style = {{transform: 'rotate(180deg)' }} className="pointer-events-none w-8 h-8 absolute top-1/2 transform -translate-y-1/6 left-2 text-[#454c4c]" />
                                 <p className='mb-2 font-bold text-blue-600'>Password:  </p>
-                                <input 
-                                type="password" 
+                                <input
+                                type="password"
                                 name='password'
-                                autocomplete="on" 
+                                autoComplete="on"
                                 placeholder='Password'
                                 className="py-2 outline pl-11 bg-[#CDEDFF] outline-orange-400 w-full rounded-md border"
                                 onChange={(e) => handleChange(e)}
@@ -89,8 +86,8 @@ const Signin = () => {
                             </div>
 
                             <div >
-                                <button 
-                                type='submit' 
+                                <button
+                                type='submit'
                                 className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
                                 onClick={handleSnackBar}>
                                     Login
@@ -99,7 +96,7 @@ const Signin = () => {
 
                         </form>
                           <div className='flex space-y-5 items-center justify-center mt-5'>
-                            <button 
+                            <button
                             onClick={()=>navigate('/register')}
                             variant='contained'>
                                 <p className='text-orange-600'>Need an YipYap Account? <span className='text-blue-600 underline'>Click Here!</span></p>
